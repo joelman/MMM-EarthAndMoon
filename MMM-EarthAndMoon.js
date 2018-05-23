@@ -170,11 +170,27 @@ Module.register("MMM-EarthAndMoon",{
 			    });
 		    });
 
+	    var time = self.sunrise;
+	    var srs = "Sunrise";
 	    if(self.day) {
-		self.message = "Sunset: " + self.sunset.toString();
-	    } else {
-		self.message = "Sunrise: " + self.sunrise.toString();
+		time = self.sunset;
+		srs = "Sunset";
 	    }
+
+	    var hours = time.getHours();
+	    var minutes = time.getMinutes().toString();
+	    var ampm = "AM";
+
+	    if(hours > 12) {
+		hours -= 12;
+		ampm = "PM";
+	    }
+
+	    if(minutes.length == 1) {
+		minutes = "0" + minutes;
+	    }
+
+	    self.message = srs + ": " + hours + ":" + minutes + " " + ampm;
 
 	    self.updateDom();
 	    
