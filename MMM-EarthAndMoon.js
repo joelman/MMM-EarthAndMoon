@@ -81,29 +81,36 @@ Module.register("MMM-EarthAndMoon",{
     updateDisplay: function() {
 	var self = this;
 
+	var earthModule = "MMM-EARTH";
+	var moonModule = "mmm-moon-phases";
+	
 	if(!self.earth || !self.moon) {
+
 	    // locate modules
 	    MM.getModules().enumerate(function(module){
-		if(module.name == "MMM-EARTH") {
+		if(module.name == earthModule) {
 		    self.earth = module;
 		    self.earth.hide();
 		}
 		
-		if(module.name == "mmm-moon-phases") {
+		if(module.name == moonModule) {
 		    self.moon = module;
 		    self.moon.hide();
 		}
 	    });
+
+	    var missing = "Unable to locate module: ";
 	    
 	    if(!self.earth) {
-		self.errors.push("Unable to locate MMM-EARTH module");
+		self.errors.push(missing + earthModule);
 	    }
 	    
 	    if(!self.moon) {
-		self.errors.push("Unable to locate mmm-moon-phases module");
+		self.errors.push(missing + moonModule);
 	    }
 	}
 
+	// bail
 	if(self.errors.length > 0) {
 	    self.updateDom();
 	    return;
