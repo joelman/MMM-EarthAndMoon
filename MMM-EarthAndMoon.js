@@ -3,21 +3,21 @@ Module.register("MMM-EarthAndMoon",{
 
 	requiresVersion: "2.1.0",
 
-	defaults: {
-	    updateInterval: 5000,
-	    initialLoadDelay: 1000,
-	    animationSpeed: 1000,
-	    showTime: true,
-	    size: ".5em",
-	    text: this.name + " loading ... "
-	},
+	    defaults: {
+	    updateInterval: 1000 * 60, // once a minute
+		initialLoadDelay: 100,
+		animationSpeed: 1000,
+		showTime: true,
+		size: ".5em",
+		},
 
 	    loaded: function(callback) {
-	    // this.finishLoading();
-	    // Log.log(this.name + ' is loaded!');
+
+	    this.finishLoading();
+	    Log.log(this.name + ' is loaded!');
 	    callback();
 	},
-
+	    
 	// Override dom generator.
 	getDom: function() {
 	    var self = this;
@@ -60,13 +60,14 @@ Module.register("MMM-EarthAndMoon",{
 
         start: function() {
 	    var self = this;
-
+	    
 	    Log.info("Starting module: " + this.name);
 
 	    this.loaded = false;
 	    this.scheduleUpdate(this.config.initialLoadDelay);
 	    this.updateTimer = null;
 
+	    self.message = self.name + " loading ...";
 	    self.errors = [];
 
 	    // check our input
@@ -109,6 +110,7 @@ Module.register("MMM-EarthAndMoon",{
 		return;
 	    }
 
+	    // only check once a day
 	    var newDay = false;
 
 	    if(self.lastRun) {
@@ -135,7 +137,7 @@ Module.register("MMM-EarthAndMoon",{
 			self.sunrise = new Date( Date.parse(info.sunrise) );
 			self.sunset = new Date( Date.parse(info.sunset) );
 			var now = new Date();
-			self.day = (now > self.sunrise && now < self.sunset);
+			self.dayTime = (now > self.sunrise && now < self.sunset);
 			
 			// console.log(info);
 			self.showHide();
@@ -150,16 +152,13 @@ Module.register("MMM-EarthAndMoon",{
 		// just update
 		self.showHide();
 	    }
-
 	},
 
 	    showHide: function() {
 	    var self = this;
-
-	    // console.log(sunrise + " " + now + " " + sunset);
 	    
-	    var s = (self.day) ? self.earth : self.moon;
-	    var h = (self.day) ? self.moon : self.earth;
+	    var s = (self.dayTime) ? self.earth : self.moon;
+	    var h = (self.dayTime) ? self.moon : self.earth;
 
 	    h.hide(self.config.animationSpeed, function() {
 		
@@ -171,22 +170,33 @@ Module.register("MMM-EarthAndMoon",{
 			    });
 		    });
 
-		if(self.config.showTime) {
-		
+	    /// use MM config 12/24 to format time
+	    if(self.config.showTime) {
+
 		    var t = self.sunrise;
 		    var srs = "Sunrise";
-		    if(self.day) {
+		    var hours = t.getHours();
+		    var minutes = t.getMinutes().toString();
+		    var ampm = "";
+
+		    if(self.dayTime) {
 			t = self.sunset;
 			srs = "Sunset";
 		    }
-		    
-		    var hours = t.getHours();
-		    var minutes = t.getMinutes().toString();
-		    var ampm = "AM";
-		    
-		    if(hours > 12) {
-			hours -= 12;
-			ampm = "PM";
+
+		    if(config.timeFormat == 12) {
+
+			ampm = "AM";
+			if(hours > 12) {
+			    ampm = "PM";
+			    hours -= 12;
+			}
+
+		    } else {
+			hours = hours.toString();
+			if(hours.length == 1) {
+			    hours = "0" + hours;
+			}
 		    }
 		    
 		    if(minutes.length == 1) {
