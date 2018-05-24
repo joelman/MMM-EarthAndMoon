@@ -7,8 +7,7 @@ Module.register("MMM-EarthAndMoon",{
 	    updateInterval: 1000 * 60, // once a minute
 		initialLoadDelay: 100,
 		animationSpeed: 1000,
-		showTime: true,
-		size: ".5em",
+		showTime: true
 		},
 
 	    loaded: function(callback) {
@@ -23,7 +22,7 @@ Module.register("MMM-EarthAndMoon",{
 	    var self = this;
 
 	    var wrapper = document.createElement("div");
-	    wrapper.style.fontSize = self.config.size;
+	    wrapper.style.fontSize = ".5em";
 	    wrapper.style.lineHeight = "1em";
 	    
 	    if(self.errors.length > 0) {
