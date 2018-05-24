@@ -1,7 +1,7 @@
 /* Magic Mirror
  * Module: MMM-EarthAndMoon
  *
- * By Joel Gwynn
+ * By Joel Gwynn joelman@gmail.com
  * 
  */
 
