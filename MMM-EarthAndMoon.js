@@ -5,10 +5,11 @@ Module.register("MMM-EarthAndMoon",{
 
 	defaults: {
 	    updateInterval: 5000,
-	    	initialLoadDelay: 1000,
-		animationSpeed: 1000,
-		size: ".5em",
-		text: "Loading sunrise/sunset ..."
+	    initialLoadDelay: 1000,
+	    animationSpeed: 1000,
+	    showTime: true,
+	    size: ".5em",
+	    text: this.name + " loading ... "
 	},
 
 	    loaded: function(callback) {
@@ -48,11 +49,7 @@ Module.register("MMM-EarthAndMoon",{
 
 	    var p = document.createElement("p");
 
-	    if(self.message) {
-		p.innerText = self.message;
-	    } else {
-		p.innerText = this.config.text;
-	    }
+	    p.innerText = self.message;
 
 	    wrapper.append(p);
 
@@ -125,7 +122,7 @@ Module.register("MMM-EarthAndMoon",{
 	    if(newDay) {
 		var url = "https://api.sunrise-sunset.org/json?lat=" + self.config.lat + "&lng=" + self.config.lng + "&formatted=0";
 		console.log(url);
-		self.message = "Loading ... ";
+		self.message = self.name + " getting sunrise/sunset data ...";
 		self.updateDom();
 		
 		var req = new XMLHttpRequest();
@@ -149,7 +146,11 @@ Module.register("MMM-EarthAndMoon",{
 		};
 		
 		req.send(null);
+	    } else {
+		// just update
+		self.showHide();
 	    }
+
 	},
 
 	    showHide: function() {
@@ -170,30 +171,35 @@ Module.register("MMM-EarthAndMoon",{
 			    });
 		    });
 
-	    var time = self.sunrise;
-	    var srs = "Sunrise";
-	    if(self.day) {
-		time = self.sunset;
-		srs = "Sunset";
-	    }
+		if(self.config.showTime) {
+		
+		    var t = self.sunrise;
+		    var srs = "Sunrise";
+		    if(self.day) {
+			t = self.sunset;
+			srs = "Sunset";
+		    }
+		    
+		    var hours = t.getHours();
+		    var minutes = t.getMinutes().toString();
+		    var ampm = "AM";
+		    
+		    if(hours > 12) {
+			hours -= 12;
+			ampm = "PM";
+		    }
+		    
+		    if(minutes.length == 1) {
+			minutes = "0" + minutes;
+		    }
+		    
+		    self.message = srs + ": " + hours + ":" + minutes + " " + ampm;
+		} else {
+		    self.message = "";
+		}
 
-	    var hours = time.getHours();
-	    var minutes = time.getMinutes().toString();
-	    var ampm = "AM";
-
-	    if(hours > 12) {
-		hours -= 12;
-		ampm = "PM";
-	    }
-
-	    if(minutes.length == 1) {
-		minutes = "0" + minutes;
-	    }
-
-	    self.message = srs + ": " + hours + ":" + minutes + " " + ampm;
-
-	    self.updateDom();
-	    
+		self.updateDom();
+		
 	    this.scheduleUpdate();
 	},
 
