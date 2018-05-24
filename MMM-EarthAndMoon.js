@@ -5,6 +5,15 @@
  * 
  */
 
+/*
+    config: {
+        // Boston
+	lat: "42.3605",
+	lng: "-71.0596",
+	showTime: false
+    }
+*/
+
 Module.register("MMM-EarthAndMoon",{
     // Default module config.
     
@@ -183,7 +192,7 @@ Module.register("MMM-EarthAndMoon",{
 	    });
 	});
 
-	/// use MM config 12/24 to format time
+	// use MM config.timeFormat 12/24 to format time
 	if(self.config.showTime) {
 
 	    var t = self.sunrise;
