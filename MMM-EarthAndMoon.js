@@ -1,3 +1,10 @@
+/* Magic Mirror
+ * Module: MMM-EarthAndMoon
+ *
+ * By Joel Gwynn
+ * 
+ */
+
 Module.register("MMM-EarthAndMoon",{
     // Default module config.
     
